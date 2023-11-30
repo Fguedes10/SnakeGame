@@ -23,10 +23,6 @@ public class Snake {
     private final Position[] arr = new Position[]{head, lastElementCreated, tail};
     private LinkedList<Position> snakeBody = new LinkedList<>(List.of(arr));
 
-    public Snake(){
-        //lastElementCreated = new Position(head.getCol()+1, head.getRow());
-        //snakeBody.add(snakeBody.indexOf(head)+1, lastElementCreated);
-    }
 
     public void increaseSize() {
 
@@ -45,20 +41,18 @@ public class Snake {
         if(this.direction == LEFT && direction == RIGHT){
             direction = this.direction;
         }
+        for(Position p: snakeBody){
+            System.out.println(p.getRow() + " " + p.getCol());
+        }
         this.direction = direction;
-        Position lastPosition = null;
-        Position newHeadPosition = null;
-        for (int i = 0; i < snakeBody.size(); i++) {
+        for (int i = snakeBody.size()-1; i >= 0 ; i--) {
             if(snakeBody.get(i).equals(snakeBody.getFirst())){
-                lastPosition = snakeBody.get(i);
                 head.setRow(head.getRow()+direction.rowAdd);
                 head.setCol(head.getCol()+direction.colAdd);
                 continue;
             }
-            snakeBody.get(i).setRow(lastPosition.getRow());
-            snakeBody.get(i).setCol(lastPosition.getCol());
-            lastPosition = snakeBody.get(i);
-
+            snakeBody.get(i).setCol(snakeBody.get(i-1).getCol());
+            snakeBody.get(i).setRow(snakeBody.get(i-1).getRow());
         }
     }
     public void move(){

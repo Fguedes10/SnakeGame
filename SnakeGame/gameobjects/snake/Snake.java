@@ -17,45 +17,64 @@ public class Snake {
     private Direction direction;
     private boolean alive = true;
     private Position head = new Position(50, 12);
+    private Position lastElementCreated = null;
     private Position tail = new Position(52, 12);
-    private final Position[] arr = new Position[]{head, new Position(51, 12), tail};
-    private LinkedList<Position> snakeBody = new LinkedList<>(List.of(arr));
+    private final Position[] arr = new Position[]{head, tail};
+    private final LinkedList<Position> snakeBody = new LinkedList<>(List.of(arr));
 
+    public Snake(){
+        snakeBody.offerFirst(head);
+        snakeBody.offer(tail);
+        lastElementCreated = new Position(getHead().getCol()+1, getHead().getRow());
+        snakeBody.add(snakeBody.indexOf(head), lastElementCreated);
+    }
 
     public void increaseSize() {
 
     }
 
     public void move(Direction direction) {
+        if(this.direction == UP && direction == DOWN){
+            direction = this.direction;
+        }
+        if(this.direction == DOWN && direction == UP){
+            direction = this.direction;
+        }
+        if(this.direction == RIGHT && direction == LEFT){
+            direction = this.direction;
+        }
+        if(this.direction == LEFT && direction == RIGHT){
+            direction = this.direction;
+        }
         this.direction = direction;
-        getFullSnake().getFirst().setRow(11);
-
-
-        /*switch (direction) {
+        switch (direction) {
             case UP:
-                Position newHead = new Position(1, 1);
-                getFullSnake().addFirst(newHead);
+                getFullSnake().remove(getHead());
+                head.setRow(head.getRow()-1);
+                getFullSnake().addFirst(head);
                 return;
 
             case DOWN:
-                getFullSnake().getFirst().setRow(getFullSnake().getFirst().getRow()+1);
+                getHead().setRow(getHead().getRow()+1);
+                getFullSnake().add(0, head);
                 return;
 
             case LEFT:
-                getFullSnake().getFirst().setCol(getFullSnake().getFirst().getCol()-1);
+                getHead().setCol(getHead().getCol()-1);
+                getFullSnake().add(0, head);
                 return;
 
             case RIGHT:
-                getFullSnake().getFirst().setCol(getFullSnake().getFirst().getCol()+1);
+                getHead().setCol(getHead().getCol()+1);
+                getFullSnake().add(0, head);
                 return;
         }
-
-         */
-
     }
-
     public void move(){
-        move(UP);
+        if(direction == null ){
+            move(LEFT);
+        }
+        move(direction);
     }
 
     public void die() {
@@ -71,11 +90,11 @@ public class Snake {
     }
 
     public Position getHead() {
-        return head;
+        return snakeBody.peek();
     }
 
     public Position getTail() {
-        return tail;
+        return snakeBody.peekLast();
     }
 
     public int getSnakeSize() {

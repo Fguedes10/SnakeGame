@@ -37,7 +37,7 @@ public class Game {
         }
     }
     private int random(int max){
-        return new Random().nextInt(max - 2) + 1;
+        return new Random().nextInt(max - 2) + 2;
     }
 
     private void generateFruit() {

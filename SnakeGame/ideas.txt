@@ -1,3 +1,75 @@
 Modo hard com input, que aumenta velocidade;
 Modo extreme com input, que spawna obstaculos;
 Pausar jogo;
+
+
+
+private void settings(String setting) {
+        switch (setting) {
+            case "TAB":
+                    Field.clearSnake(snake);
+                    Field.clearFruit(fruit);
+                    Field.drawWalls();
+                    snake = new Snake();
+                    fruit = new Fruit(new Position(Util.randomCol(), Util.randomRow()));
+                    Field.scoreCounter = 0;
+                    break;
+
+                case "ENTER":
+                    setPause(!pause);
+                    break;
+
+                case "ESCAPE":
+                    System.exit(1);
+        }
+    }
+
+    private void inputs(){
+        Key k = Field.readInput();
+
+        if (k != null) {
+            switch (k.getKind()) {
+                case ArrowUp:
+                    moveSnake("ARROW UP");
+                    break;
+                case ArrowDown:
+                    moveSnake("ARROW DOWN");
+                    break;
+                case ArrowLeft:
+                    moveSnake("ARROW LEFT");
+                    break;
+                case ArrowRight:
+                    moveSnake("ARROW RIGHT");
+                    break;
+                case Tab:
+                    settings("TAB");
+                    break;
+                case Enter:
+                    settings("ENTER");
+                    break;
+                case Escape:
+                    settings("ESCAPE");
+            }
+        }
+    }
+
+    private void moveSnake(String dir) {
+            switch (dir) {
+                case "ARROW UP":
+                    snake.checkForbiddenDirections(UP);
+                    break;
+
+                case "ARROW DOWN":
+                    snake.checkForbiddenDirections(DOWN);
+                    break;
+
+                case "ARROW LEFT":
+                    snake.checkForbiddenDirections(LEFT);
+                    break;
+
+                case "ARROW RIGHT":
+                    snake.checkForbiddenDirections(RIGHT);
+                    break;
+            }
+            snake.move();
+        }

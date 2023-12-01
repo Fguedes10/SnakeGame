@@ -10,7 +10,7 @@ import java.util.*;
 import week4.SnakeGame.Util.Util;
 
 public class Game {
-    private int delay;
+    private final int delay;
     private Snake snake;
     private Fruit fruit;
     private boolean pause;
@@ -20,32 +20,22 @@ public class Game {
         Field.init(cols, rows);
         snake = new Snake();
     }
-
-    public boolean isPause() {
-        return pause;
-    }
-
     public void setPause(boolean pause) {
         this.pause = pause;
     }
 
     public void start() throws InterruptedException {
-
         generateFruit();
 
-        while (true) {//snake.isAlive()
-            //System.out.println(pause);
-            if(!isPause()) {
-                inputs();
-                Thread.sleep(delay);
-                Field.clearTail(snake);
-                generateFruit();
-                checkCollisions();
-                checkSnakeHasEaten();
-                moveSnake();
-                Field.drawSnake(snake);
-                Field.drawFruit(this.fruit);
-            }
+        while (true) {
+            Thread.sleep(delay);
+            generateFruit();
+            checkCollisions();
+            Field.drawSnake(snake);
+            Field.drawFruit(this.fruit);
+            Field.clearTail(snake);
+            moveSnake();
+            checkSnakeHasEaten();
         }
     }
 
@@ -62,12 +52,10 @@ public class Game {
         }
     }
 
-    private void inputs(){
-
-        Key t = Field.readInput();
-
-        if (t != null) {
-            switch (t.getKind()) {
+    private void moveSnake() {
+        Key k = Field.readInput();
+        if (k != null) {
+            switch (k.getKind()) {
                 case Tab:
                     Field.clearSnake(snake);
                     Field.clearFruit(fruit);
@@ -78,49 +66,43 @@ public class Game {
                     return;
 
                 case Enter:
-                    setPause(true);
+                    setPause(!pause);
                     return;
 
                 case Escape:
-                    //System.exit(1);
-                    setPause(false);
+                    System.exit(1);
+                    return;
+            }
+            if(!pause){
+                switch (k.getKind()) {
+                    case ArrowUp:
+                        snake.checkForbiddenDirections(UP);
+                        return;
+
+                    case ArrowDown:
+                        snake.checkForbiddenDirections(DOWN);
+                        return;
+
+                    case ArrowLeft:
+                        snake.checkForbiddenDirections(LEFT);
+                        return;
+
+                    case ArrowRight:
+                        snake.checkForbiddenDirections(RIGHT);
+                        return;
+                }
             }
         }
-    }
-
-    private void moveSnake() {
-
-        Key k = Field.readInput();
-
-        if (k != null) {
-            switch (k.getKind()) {
-                case ArrowUp:
-                    setPause(false);
-                    snake.checkForbiddenDirections(UP);
-                    return;
-
-                case ArrowDown:
-                    setPause(false);
-                    snake.checkForbiddenDirections(DOWN);
-                    return;
-
-                case ArrowLeft:
-                    setPause(false);
-                    snake.checkForbiddenDirections(LEFT);
-                    return;
-
-                case ArrowRight:
-                    setPause(false);
-                    snake.checkForbiddenDirections(RIGHT);
-                    return;
-
-            }
+        if(!pause){
+            snake.move();
         }
-        snake.move();
     }
 
     private void checkCollisions() {
-        if(snake.getHead().getCol() == Field.getWidth()-1|| snake.getHead().getCol() == 0 || snake.getHead().getRow() == Field.getHeight()-1  || snake.getHead().getRow() == 0 || checkIfSnakeCollidedWithItself()){
+        int snakeHeadCol = snake.getHead().getCol();
+        int snakeHeadRow = snake.getHead().getRow();
+        if (snakeHeadCol == 0||snakeHeadRow == 0||snakeHeadCol == Field.getWidth()-1||
+                snakeHeadRow == Field.getHeight()-1||checkIfSnakeCollidedWithItself()){
             snake.die();
         }
     }

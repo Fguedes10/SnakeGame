@@ -25,10 +25,27 @@ public class Snake {
 
 
     public void increaseSize() {
-
+        snakeBody.offer(new Position());
     }
 
     public void move(Direction direction) {
+        for(Position p: snakeBody){
+            System.out.println(p.getRow() + " " + p.getCol());
+        }
+        direction = checkForbiddenDirections(direction);
+        this.direction = direction;
+        for (int i = snakeBody.size()-1; i >= 0 ; i--) {
+            if(snakeBody.get(i).equals(snakeBody.getFirst())){
+                head.setRow(head.getRow()+direction.rowAdd);
+                head.setCol(head.getCol()+direction.colAdd);
+                continue;
+            }
+            snakeBody.get(i).setCol(snakeBody.get(i-1).getCol());
+            snakeBody.get(i).setRow(snakeBody.get(i-1).getRow());
+        }
+    }
+
+    private Direction checkForbiddenDirections(Direction direction) {
         if(this.direction == UP && direction == DOWN){
             direction = this.direction;
         }
@@ -41,20 +58,9 @@ public class Snake {
         if(this.direction == LEFT && direction == RIGHT){
             direction = this.direction;
         }
-        for(Position p: snakeBody){
-            System.out.println(p.getRow() + " " + p.getCol());
-        }
-        this.direction = direction;
-        for (int i = snakeBody.size()-1; i >= 0 ; i--) {
-            if(snakeBody.get(i).equals(snakeBody.getFirst())){
-                head.setRow(head.getRow()+direction.rowAdd);
-                head.setCol(head.getCol()+direction.colAdd);
-                continue;
-            }
-            snakeBody.get(i).setCol(snakeBody.get(i-1).getCol());
-            snakeBody.get(i).setRow(snakeBody.get(i-1).getRow());
-        }
+        return direction;
     }
+
     public void move(){
         if(direction == null ){
             move(LEFT);

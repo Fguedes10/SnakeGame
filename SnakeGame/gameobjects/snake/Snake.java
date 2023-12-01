@@ -17,7 +17,8 @@ public class Snake {
         this.direction = LEFT;
         this.snakeBody = new LinkedList<>(List.of(new Position[]{
                 new Position(50, 12),
-                new Position(51, 12)}));
+                new Position(51, 12),
+                new Position(52,12)}));
         }
 
     public void increaseSize() {

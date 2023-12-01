@@ -53,8 +53,7 @@ public final class Field {
             snakeColor = Terminal.Color.RED;
         }
 
-        screen.putString(6, 0, "SCOREBOARD: " + scoreCounter, Terminal.Color.GREEN ,null);
-        screen.putString(25, 0, "MAX SCORE: " + maxScore, Terminal.Color.YELLOW,null);
+        createScoreboard();
 
         Position head = snake.getHead();
 
@@ -68,7 +67,13 @@ public final class Field {
         screen.refresh();
     }
 
-    private static void drawWalls() {
+    private static void createScoreboard() {
+        screen.putString(6, 0, "SCOREBOARD: " + scoreCounter, Terminal.Color.GREEN ,null);
+        screen.putString(25, 0, "MAX SCORE: " + maxScore, Terminal.Color.YELLOW,null);
+        screen.putString(70, 25, "RESTART GAME -> TAB" , Terminal.Color.BLUE,null);
+    }
+
+    public static void drawWalls() {
         for (int i = 0; i < width; i++) {
             screenWriter.drawString(i, 0, BORDER_STRING);
             screenWriter.drawString(i, height - 1, BORDER_STRING);

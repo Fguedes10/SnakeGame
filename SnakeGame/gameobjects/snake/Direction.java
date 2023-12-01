@@ -16,8 +16,4 @@ public enum Direction {
         this.moveCol = moveCol;
         this.opposite = opposite;
     }
-
-    public String getOpposite() {
-        return opposite;
-    }
 }

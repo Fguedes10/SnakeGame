@@ -25,7 +25,9 @@ public class Snake {
     }
 
     public void move(){
-        if(alive){move(direction);}
+        if(alive){
+            move(direction);
+        }
     }
 
     private void move(Direction direction) {

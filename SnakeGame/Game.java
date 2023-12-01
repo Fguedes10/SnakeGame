@@ -7,17 +7,26 @@ import week4.SnakeGame.gameobjects.snake.Snake;
 import com.googlecode.lanterna.input.Key;
 import static week4.SnakeGame.gameobjects.snake.Direction.*;
 import java.util.*;
+import week4.SnakeGame.Util.Util;
 
 public class Game {
+    private int delay;
     private Snake snake;
     private Fruit fruit;
-    private final int delay;
+    private boolean pause;
 
     public Game(int cols, int rows, int delay) {
         this.delay = delay;
         Field.init(cols, rows);
         snake = new Snake();
-        fruit = new Fruit(new Position(30, 3)); //generateFruit();
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
     }
 
     public void start() throws InterruptedException {
@@ -25,64 +34,86 @@ public class Game {
         generateFruit();
 
         while (true) {//snake.isAlive()
-            Thread.sleep(delay);
-            Field.clearTail(snake);
-            moveSnake();
-            generateFruit();
-            checkCollisions();
-            checkSnakeHasEaten();
-            Field.drawSnake(snake);
+            //System.out.println(pause);
+            if(!isPause()) {
+                inputs();
+                Thread.sleep(delay);
+                Field.clearTail(snake);
+                generateFruit();
+                checkCollisions();
+                checkSnakeHasEaten();
+                moveSnake();
+                Field.drawSnake(snake);
+                Field.drawFruit(this.fruit);
+            }
         }
-    }
-    private int random(int max){
-        return new Random().nextInt(max - 2) + 2;
     }
 
     private void generateFruit() {
-        Field.drawFruit(this.fruit);
-        while (fruit.isEaten()) {
+        if(fruit == null){
+            this.fruit = new Fruit(new Position(Util.randomCol(), Util.randomRow()));
+        }
+        if(fruit.isEaten()) {
             Set<Position> set = snakePositions();
-            int col = random(Field.getWidth() - 2);
-            int row = random(Field.getHeight() -2);
-            if (col > 0 && row > 0) {
-                if (set.contains(new Position(col, row))) {
-                    generateFruit();
-                }
+            this.fruit = new Fruit(new Position(Util.randomCol(), Util.randomRow()));
+            if (set.contains(fruit.getPosition())) {
+                generateFruit();
             }
-            this.fruit = new Fruit(new Position(col, row));
         }
     }
 
-    private void moveSnake() throws InterruptedException {
+    private void inputs(){
+
+        Key t = Field.readInput();
+
+        if (t != null) {
+            switch (t.getKind()) {
+                case Tab:
+                    Field.clearSnake(snake);
+                    Field.clearFruit(fruit);
+                    Field.drawWalls();
+                    snake = new Snake();
+                    fruit = new Fruit(new Position(Util.randomCol(), Util.randomRow()));
+                    Field.scoreCounter = 0;
+                    return;
+
+                case Enter:
+                    setPause(true);
+                    return;
+
+                case Escape:
+                    //System.exit(1);
+                    setPause(false);
+            }
+        }
+    }
+
+    private void moveSnake() {
 
         Key k = Field.readInput();
 
         if (k != null) {
             switch (k.getKind()) {
                 case ArrowUp:
+                    setPause(false);
                     snake.checkForbiddenDirections(UP);
                     return;
 
                 case ArrowDown:
+                    setPause(false);
                     snake.checkForbiddenDirections(DOWN);
                     return;
 
                 case ArrowLeft:
+                    setPause(false);
                     snake.checkForbiddenDirections(LEFT);
                     return;
 
                 case ArrowRight:
+                    setPause(false);
                     snake.checkForbiddenDirections(RIGHT);
                     return;
 
-                case Tab:
-                    Field.clearSnake(snake);
-                    Field.clearFruit(fruit);
-                    snake = new Snake();
-                    fruit = new Fruit(new Position(30, 3));
-                    //score = 0;
-                    //delay = 100;
-                    return;
             }
         }
         snake.move();
@@ -93,9 +124,11 @@ public class Game {
             snake.die();
         }
     }
+
     private boolean checkIfSnakeCollidedWithItself() {
         return snakePositions().size() != snake.getSnakeSize();
     }
+
     private Set<Position> snakePositions() {
         return new HashSet<>(snake.getFullSnake());
     }

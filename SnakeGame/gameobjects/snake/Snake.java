@@ -25,17 +25,19 @@ public class Snake {
     }
 
     public void move(){
-        move(direction);
+        if(alive){move(direction);}
     }
 
     private void move(Direction direction) {
-        this.direction = direction;
-        for (int i = getSnakeSize()-1; i > 0 ; i--) {
-            snakeBody.get(i).setCol(snakeBody.get(i-1).getCol());
-            snakeBody.get(i).setRow(snakeBody.get(i-1).getRow());
+        if(alive) {
+            this.direction = direction;
+            for (int i = getSnakeSize() - 1; i > 0; i--) {
+                snakeBody.get(i).setCol(snakeBody.get(i - 1).getCol());
+                snakeBody.get(i).setRow(snakeBody.get(i - 1).getRow());
+            }
+            getHead().setRow(getHead().getRow() + direction.moveRow);
+            getHead().setCol(getHead().getCol() + direction.moveCol);
         }
-        getHead().setRow(getHead().getRow()+direction.moveRow);
-        getHead().setCol(getHead().getCol()+direction.moveCol);
     }
 
     public void checkForbiddenDirections(Direction direction) {
@@ -46,8 +48,8 @@ public class Snake {
     }
 
     public void die() {
-        Field.checkMaxScore();
         alive = false;
+        Field.checkMaxScore();
     }
 
     public boolean isAlive() {

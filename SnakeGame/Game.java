@@ -6,32 +6,31 @@ import week4.SnakeGame.gameobjects.fruit.Fruit;
 import week4.SnakeGame.gameobjects.snake.Snake;
 import com.googlecode.lanterna.input.Key;
 import static week4.SnakeGame.gameobjects.snake.Direction.*;
-
 import java.util.*;
 
 public class Game {
-    private final Snake snake;
+    private Snake snake;
     private Fruit fruit;
     private final int delay;
 
     public Game(int cols, int rows, int delay) {
+        this.delay = delay;
         Field.init(cols, rows);
         snake = new Snake();
-        fruit = new Fruit(new Position(30, 3));
-        this.delay = delay;
+        fruit = new Fruit(new Position(30, 3)); //generateFruit();
     }
 
     public void start() throws InterruptedException {
 
         generateFruit();
 
-        while (snake.isAlive()) {
+        while (true) {//snake.isAlive()
             Thread.sleep(delay);
             Field.clearTail(snake);
             moveSnake();
-            checkSnakeHasEaten();
             generateFruit();
             checkCollisions();
+            checkSnakeHasEaten();
             Field.drawSnake(snake);
         }
     }
@@ -54,7 +53,7 @@ public class Game {
         }
     }
 
-    private void moveSnake() {
+    private void moveSnake() throws InterruptedException {
 
         Key k = Field.readInput();
 
@@ -74,6 +73,15 @@ public class Game {
 
                 case ArrowRight:
                     snake.checkForbiddenDirections(RIGHT);
+                    return;
+
+                case Tab:
+                    Field.clearSnake(snake);
+                    Field.clearFruit(fruit);
+                    snake = new Snake();
+                    fruit = new Fruit(new Position(30, 3));
+                    //score = 0;
+                    //delay = 100;
                     return;
             }
         }

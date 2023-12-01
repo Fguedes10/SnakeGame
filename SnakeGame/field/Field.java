@@ -8,6 +8,8 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.ScreenWriter;
 import com.googlecode.lanterna.terminal.Terminal;
 
+import java.util.LinkedList;
+
 public final class Field {
 
     private static final String BORDER_STRING = "▒";
@@ -51,8 +53,8 @@ public final class Field {
             snakeColor = Terminal.Color.RED;
         }
 
-        screenWriter.drawString(6, 0, "SCOREBOARD: " + scoreCounter);
-        screenWriter.drawString(25, 0, "MAX SCORE: " + maxScore);
+        screen.putString(6, 0, "SCOREBOARD: " + scoreCounter, Terminal.Color.GREEN ,null);
+        screen.putString(25, 0, "MAX SCORE: " + maxScore, Terminal.Color.YELLOW,null);
 
         Position head = snake.getHead();
 
@@ -64,11 +66,6 @@ public final class Field {
             }
         }
         screen.refresh();
-    }
-
-    public static void clearTail(Snake snake) {
-        Position tail = snake.getTail();
-        screen.putString(tail.getCol(), tail.getRow(), " ", null, null);
     }
 
     private static void drawWalls() {
@@ -97,5 +94,22 @@ public final class Field {
 
     public static int getHeight() {
         return height;
+    }
+
+    public static void clearTail(Snake snake) {
+        Position tail = snake.getTail();
+        screen.putString(tail.getCol(), tail.getRow(), " ", null, null);
+    }
+
+    public static void clearSnake(Snake snake) {
+        LinkedList<Position> fullSnake = snake.getFullSnake();
+        for(Position p: fullSnake){
+            screen.putString(p.getCol(), p.getRow(), " ", null, null);
+        }
+    }
+
+    public static void clearFruit(Fruit fruit) {
+        Position fruitPosition = fruit.getPosition();
+        screen.putString(fruitPosition.getCol(), fruitPosition.getRow(), " ", null, null);
     }
 }

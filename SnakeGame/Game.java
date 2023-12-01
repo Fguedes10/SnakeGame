@@ -17,7 +17,9 @@ public class Game {
         this.delay = delay;
         Field.init(cols, rows);
         snake = new Snake();
-        fruit = new Fruit(new Position(30, 3)); //generateFruit();
+        int col = random(Field.getWidth() - 2);
+        int row = random(Field.getHeight() -2);
+        fruit = new Fruit(new Position(col, row)); //generateFruit();
     }
 
     public void start() throws InterruptedException {

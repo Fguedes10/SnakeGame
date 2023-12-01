@@ -3,28 +3,27 @@ package week4.SnakeGame;
 import week4.SnakeGame.field.Field;
 import week4.SnakeGame.field.Position;
 import week4.SnakeGame.gameobjects.fruit.Fruit;
-import week4.SnakeGame.gameobjects.snake.Direction;
 import week4.SnakeGame.gameobjects.snake.Snake;
 import com.googlecode.lanterna.input.Key;
+import static week4.SnakeGame.gameobjects.snake.Direction.*;
 
 import java.util.*;
 
-
 public class Game {
-
-    private Snake snake;
-    private Fruit fruit = new Fruit(new Position(30, 3));
-    private int delay;
+    private final Snake snake;
+    private Fruit fruit;
+    private final int delay;
 
     public Game(int cols, int rows, int delay) {
         Field.init(cols, rows);
         snake = new Snake();
+        fruit = new Fruit(new Position(30, 3));
         this.delay = delay;
     }
 
     public void start() throws InterruptedException {
 
-        generateFruit(); // uncomment when it's time to introduce fruits
+        generateFruit();
 
         while (snake.isAlive()) {
             Thread.sleep(delay);
@@ -62,19 +61,19 @@ public class Game {
         if (k != null) {
             switch (k.getKind()) {
                 case ArrowUp:
-                    snake.move(Direction.UP);
+                    snake.checkForbiddenDirections(UP);
                     return;
 
                 case ArrowDown:
-                    snake.move(Direction.DOWN);
+                    snake.checkForbiddenDirections(DOWN);
                     return;
 
                 case ArrowLeft:
-                    snake.move(Direction.LEFT);
+                    snake.checkForbiddenDirections(LEFT);
                     return;
 
                 case ArrowRight:
-                    snake.move(Direction.RIGHT);
+                    snake.checkForbiddenDirections(RIGHT);
                     return;
             }
         }
@@ -87,7 +86,6 @@ public class Game {
         }
     }
     private boolean checkIfSnakeCollidedWithItself() {
-        //Set<Position> set = new HashSet<>(snake.getFullSnake());
         return snakePositions().size() != snake.getSnakeSize();
     }
     private Set<Position> snakePositions() {
@@ -97,6 +95,7 @@ public class Game {
     private void checkSnakeHasEaten(){
         if(fruit.getPosition().equals(snake.getHead())){
             fruit.setEaten(true);
+            Field.scoreCounter++;
             snake.increaseSize();
         }
     }

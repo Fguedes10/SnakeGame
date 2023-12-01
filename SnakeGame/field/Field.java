@@ -14,15 +14,18 @@ public final class Field {
     private static final String SNAKE_BODY_STRING = "#";
     private static final String SNAKE_HEAD_STRING = "0";
     private static final String FRUIT_STRING = "@";
-
+    public static int maxScore;
+    public static int scoreCounter;
     private static int width;
     private static int height;
     private static Screen screen;
     private static ScreenWriter screenWriter;
 
-    private Field() {
+    public static void checkMaxScore(){
+        if(scoreCounter > maxScore){
+            maxScore = scoreCounter;
+        }
     }
-
     public static void init(int width, int height) {
 
         screen = TerminalFacade.createScreen();
@@ -47,6 +50,9 @@ public final class Field {
         if (!snake.isAlive()){
             snakeColor = Terminal.Color.RED;
         }
+
+        screenWriter.drawString(6, 0, "SCOREBOARD: " + scoreCounter);
+        screenWriter.drawString(25, 0, "MAX SCORE: " + maxScore);
 
         Position head = snake.getHead();
 

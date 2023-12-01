@@ -1,1 +1,6 @@
-criar array de percurso da head; os outros tem de passar nestas positions;
+Verificar bug da direção;
+Criar scoreboard;
+Modo hard com input, que aumenta velocidade;
+Modo extreme com input, que spawna obstaculos;
+Pausar jogo;
+Restart jogo;

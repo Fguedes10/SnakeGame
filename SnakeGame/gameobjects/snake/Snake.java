@@ -1,74 +1,52 @@
 package week4.SnakeGame.gameobjects.snake;
-
-
+import week4.SnakeGame.field.Field;
 import week4.SnakeGame.field.Position;
 
-import java.awt.*;
-import java.io.PipedOutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import static week4.SnakeGame.gameobjects.snake.Direction.*;
 
 public class Snake {
-
-    private final static int SNAKE_INITIAL_SIZE = 3;
+    private boolean alive;
     private Direction direction;
-    private boolean alive = true;
-    private Position head = new Position(50, 12);
-    private Position lastElementCreated = new Position(head.getCol()+1, head.getRow());
-    private Position tail = new Position(52, 12);
-    private final Position[] arr = new Position[]{head, lastElementCreated, tail};
-    private LinkedList<Position> snakeBody = new LinkedList<>(List.of(arr));
+    private final LinkedList<Position> snakeBody;
 
+    public Snake(){
+        this.alive = true;
+        this.direction = LEFT;
+        this.snakeBody = new LinkedList<>(List.of(new Position[]{
+                new Position(50, 12),
+                new Position(51, 12)}));
+        }
 
     public void increaseSize() {
         snakeBody.offer(new Position());
     }
 
-    public void move(Direction direction) {
-        for(Position p: snakeBody){
-            System.out.println(p.getRow() + " " + p.getCol());
-        }
-        direction = checkForbiddenDirections(direction);
+    public void move(){
+        move(direction);
+    }
+
+    private void move(Direction direction) {
         this.direction = direction;
-        for (int i = snakeBody.size()-1; i >= 0 ; i--) {
-            if(snakeBody.get(i).equals(snakeBody.getFirst())){
-                head.setRow(head.getRow()+direction.rowAdd);
-                head.setCol(head.getCol()+direction.colAdd);
-                continue;
-            }
+        for (int i = getSnakeSize()-1; i > 0 ; i--) {
             snakeBody.get(i).setCol(snakeBody.get(i-1).getCol());
             snakeBody.get(i).setRow(snakeBody.get(i-1).getRow());
         }
+        getHead().setRow(getHead().getRow()+direction.moveRow);
+        getHead().setCol(getHead().getCol()+direction.moveCol);
     }
 
-    private Direction checkForbiddenDirections(Direction direction) {
-        if(this.direction == UP && direction == DOWN){
+    public void checkForbiddenDirections(Direction direction) {
+        if(direction.opposite.equals(this.direction.toString())){
             direction = this.direction;
-        }
-        if(this.direction == DOWN && direction == UP){
-            direction = this.direction;
-        }
-        if(this.direction == RIGHT && direction == LEFT){
-            direction = this.direction;
-        }
-        if(this.direction == LEFT && direction == RIGHT){
-            direction = this.direction;
-        }
-        return direction;
-    }
-
-    public void move(){
-        if(direction == null ){
-            move(LEFT);
         }
         move(direction);
     }
 
     public void die() {
+        Field.checkMaxScore();
         alive = false;
     }
 
@@ -81,7 +59,7 @@ public class Snake {
     }
 
     public Position getHead() {
-        return head;
+        return snakeBody.getFirst();
     }
 
     public Position getTail() {
@@ -90,9 +68,5 @@ public class Snake {
 
     public int getSnakeSize() {
         return snakeBody.size();
-    }
-
-    public void setHead(Position head) {
-        this.head = head;
     }
 }

@@ -36,16 +36,16 @@ public class Game {
             Field.drawSnake(snake);
         }
     }
-    private int random(int max, int min){
-        return new Random().nextInt(max + 1 - min) + min;
+    private int random(int max){
+        return new Random().nextInt(max - 2) + 1;
     }
 
     private void generateFruit() {
         Field.drawFruit(this.fruit);
         while (fruit.isEaten()) {
             Set<Position> set = snakePositions();
-            int col = random(Field.getWidth() - 1, 1);
-            int row = random(Field.getHeight() -1, 1);
+            int col = random(Field.getWidth() - 2);
+            int row = random(Field.getHeight() -2);
             if (col > 0 && row > 0) {
                 if (set.contains(new Position(col, row))) {
                     generateFruit();

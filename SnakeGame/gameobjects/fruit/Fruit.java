@@ -3,7 +3,7 @@ package week4.SnakeGame.gameobjects.fruit;
 import week4.SnakeGame.field.Position;
 
 public class Fruit {
-    private Position position;
+    private final Position position;
     private boolean eaten;
 
     public Fruit(Position position){

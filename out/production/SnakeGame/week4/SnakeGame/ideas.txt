@@ -1,2 +1,0 @@
-Modo hard com input, que aumenta velocidade;
-Modo extreme com input, que spawna obstaculos;

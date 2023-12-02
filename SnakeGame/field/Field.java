@@ -69,7 +69,7 @@ public final class Field {
         screen.refresh();
     }
 
-    private static void drawMainMenu(){
+    public static void drawMainMenu(){
         for (int i = 25; i < 76; i++) {
             screenWriter.drawString(i, 5, BORDER_STRING);
             screenWriter.drawString(i, 20, BORDER_STRING);
@@ -79,10 +79,9 @@ public final class Field {
             screenWriter.drawString(75, i, BORDER_STRING);
         }
         screenWriter.drawString(47, 7, WELCOME);
-        screenWriter.drawString(42, 12, "CHOOSE GAME MODE:");
-        screenWriter.drawString(30, 15, "1. NORMAL");
-        screenWriter.drawString(45, 15, "2. HARD");
-        screenWriter.drawString(58, 15, "3. EXTREME");
+        screenWriter.drawString(42, 10, "CHOOSE GAME MODE:");
+        screenWriter.drawString(40, 13, "(BACKSPACE) NORMAL");
+        screenWriter.drawString(40, 15, "(HOME) HARD");
     }
 
     public static void clearMenu(){
@@ -98,6 +97,8 @@ public final class Field {
         screen.putString(6, 0, "SCOREBOARD: " + scoreCounter, Terminal.Color.GREEN ,null);
         screen.putString(25, 0, "MAX SCORE: " + maxScore, Terminal.Color.YELLOW,null);
         screen.putString(70, 25, "RESTART GAME -> TAB" , Terminal.Color.BLUE,null);
+        screen.putString(45, 25, "PAUSE -> ENTER" , Terminal.Color.BLUE,null);
+        screen.putString(5, 25, "QUIT -> ESCAPE" , Terminal.Color.RED,null);
     }
 
     public static void drawWalls() {

@@ -16,7 +16,6 @@ public class Game {
     private Snake snake;
     private boolean pause;
     private boolean hard;
-    private boolean extreme;
     private Fruit fruit;
 
     public Game(int cols, int rows, int delay) {
@@ -25,12 +24,7 @@ public class Game {
         snake = new Snake();
         this.pause = true;
         this.hard = false;
-        this.extreme = false;
     }
-    public void setPause(boolean pause) {
-        this.pause = pause;
-    }
-
     public void start() throws InterruptedException {
         while(true) {
             if (gameModeChosen()) {
@@ -49,11 +43,11 @@ public class Game {
             }
         }
     }
-
     private boolean gameModeChosen() {
         Key k = Field.readInput();
         if(k != null) {
             if (k.getKind() == Backspace) {
+                hard = false;
                 Field.clearMenu();
                 setPause(false);
                 return true;
@@ -64,27 +58,8 @@ public class Game {
                 setPause(false);
                 return true;
             }
-            if (k.getKind() == End) {
-                extreme = true;
-                Field.clearMenu();
-                setPause(false);
-                return true;
-            }
         }
         return false;
-    }
-
-    private void generateFruit() {
-        if(fruit == null){
-            this.fruit = new Fruit(new Position(Util.randomCol(), Util.randomRow()));
-        }
-        if(fruit.isEaten()) {
-            Set<Position> set = snakePositions();
-            this.fruit = new Fruit(new Position(Util.randomCol(), Util.randomRow()));
-            if (set.contains(fruit.getPosition())) {
-                generateFruit();
-            }
-        }
     }
 
     private void moveSnake() {
@@ -133,6 +108,19 @@ public class Game {
         }
     }
 
+    private void generateFruit() {
+        if(fruit == null){
+            this.fruit = new Fruit(new Position(Util.randomCol(), Util.randomRow()));
+        }
+        if(fruit.isEaten()) {
+            Set<Position> set = snakePositions();
+            this.fruit = new Fruit(new Position(Util.randomCol(), Util.randomRow()));
+            if (set.contains(fruit.getPosition())) {
+                generateFruit();
+            }
+        }
+    }
+
     private void checkCollisions() {
         int snakeHeadCol = snake.getHead().getCol();
         int snakeHeadRow = snake.getHead().getRow();
@@ -142,21 +130,27 @@ public class Game {
         }
     }
 
-    private boolean checkIfSnakeCollidedWithItself() {
-        return snakePositions().size() != snake.getSnakeSize();
-    }
-
-    private Set<Position> snakePositions() {
-        return new HashSet<>(snake.getFullSnake());
-    }
     private void checkSnakeHasEaten(){
         if(fruit.getPosition().equals(snake.getHead())){
             fruit.setEaten(true);
             Field.scoreCounter++;
             snake.increaseSize();
             if(hard){
-                delay -= 30;
+                if (delay > 50) {
+                    delay -= 1;
+                }
             }
         }
+    }
+
+    private Set<Position> snakePositions() {
+        return new HashSet<>(snake.getFullSnake());
+    }
+
+    private boolean checkIfSnakeCollidedWithItself() {
+        return snakePositions().size() != snake.getSnakeSize();
+    }
+    public void setPause(boolean pause) {
+        this.pause = pause;
     }
 }

@@ -5,38 +5,73 @@ import week4.SnakeGame.field.Position;
 import week4.SnakeGame.gameobjects.fruit.Fruit;
 import week4.SnakeGame.gameobjects.snake.Snake;
 import com.googlecode.lanterna.input.Key;
+
+import static com.googlecode.lanterna.input.Key.Kind.*;
 import static week4.SnakeGame.gameobjects.snake.Direction.*;
 import java.util.*;
 import week4.SnakeGame.Util.Util;
 
 public class Game {
-    private final int delay;
+    private int delay;
     private Snake snake;
-    private Fruit fruit;
     private boolean pause;
+    private boolean hard;
+    private boolean extreme;
+    private Fruit fruit;
 
     public Game(int cols, int rows, int delay) {
         this.delay = delay;
         Field.init(cols, rows);
         snake = new Snake();
+        this.pause = true;
+        this.hard = false;
+        this.extreme = false;
     }
     public void setPause(boolean pause) {
         this.pause = pause;
     }
 
     public void start() throws InterruptedException {
-        generateFruit();
+        while(true) {
+            if (gameModeChosen()) {
+                generateFruit();
 
-        while (true) {
-            Thread.sleep(delay);
-            generateFruit();
-            checkCollisions();
-            Field.drawSnake(snake);
-            Field.drawFruit(this.fruit);
-            Field.clearTail(snake);
-            moveSnake();
-            checkSnakeHasEaten();
+                while (true) {
+                    Thread.sleep(delay);
+                    generateFruit();
+                    checkCollisions();
+                    Field.drawSnake(snake);
+                    Field.drawFruit(this.fruit);
+                    Field.clearTail(snake);
+                    moveSnake();
+                    checkSnakeHasEaten();
+                }
+            }
         }
+    }
+
+    private boolean gameModeChosen() {
+        Key k = Field.readInput();
+        if(k != null) {
+            if (k.getKind() == Backspace) {
+                Field.clearMenu();
+                setPause(false);
+                return true;
+            }
+            if (k.getKind() == Home) {
+                hard = true;
+                Field.clearMenu();
+                setPause(false);
+                return true;
+            }
+            if (k.getKind() == End) {
+                extreme = true;
+                Field.clearMenu();
+                setPause(false);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void generateFruit() {
@@ -114,12 +149,14 @@ public class Game {
     private Set<Position> snakePositions() {
         return new HashSet<>(snake.getFullSnake());
     }
-
     private void checkSnakeHasEaten(){
         if(fruit.getPosition().equals(snake.getHead())){
             fruit.setEaten(true);
             Field.scoreCounter++;
             snake.increaseSize();
+            if(hard){
+                delay -= 30;
+            }
         }
     }
 }

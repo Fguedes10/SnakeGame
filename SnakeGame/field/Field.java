@@ -16,6 +16,7 @@ public final class Field {
     private static final String SNAKE_BODY_STRING = "#";
     private static final String SNAKE_HEAD_STRING = "0";
     private static final String FRUIT_STRING = "@";
+    private static final String WELCOME = "WELCOME";
     public static int maxScore;
     public static int scoreCounter;
     private static int width;
@@ -42,6 +43,7 @@ public final class Field {
         screen.startScreen();
 
         drawWalls();
+        drawMainMenu();
         screen.refresh();
     }
 
@@ -65,6 +67,31 @@ public final class Field {
             }
         }
         screen.refresh();
+    }
+
+    private static void drawMainMenu(){
+        for (int i = 25; i < 76; i++) {
+            screenWriter.drawString(i, 5, BORDER_STRING);
+            screenWriter.drawString(i, 20, BORDER_STRING);
+        }
+        for (int i = 5; i < 21; i++) {
+            screenWriter.drawString(25, i, BORDER_STRING);
+            screenWriter.drawString(75, i, BORDER_STRING);
+        }
+        screenWriter.drawString(47, 7, WELCOME);
+        screenWriter.drawString(42, 12, "CHOOSE GAME MODE:");
+        screenWriter.drawString(30, 15, "1. NORMAL");
+        screenWriter.drawString(45, 15, "2. HARD");
+        screenWriter.drawString(58, 15, "3. EXTREME");
+    }
+
+    public static void clearMenu(){
+        for (int i = 1; i < width-1; i++) {
+            for (int j = 1; j < height-1 ; j++) {
+                screenWriter.drawString(i, j, " ");
+                screenWriter.drawString(i, j, " ");
+            }
+        }
     }
 
     private static void createScoreboard() {

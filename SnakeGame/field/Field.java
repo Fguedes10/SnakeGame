@@ -13,6 +13,7 @@ import java.util.LinkedList;
 public final class Field {
 
     private static final String BORDER_STRING = "▒";
+    private static final String MENUBORDER_STRING = "*";
     private static final String SNAKE_BODY_STRING = "#";
     private static final String SNAKE_HEAD_STRING = "0";
     private static final String FRUIT_STRING = "@";
@@ -71,17 +72,18 @@ public final class Field {
 
     public static void drawMainMenu(){
         for (int i = 25; i < 76; i++) {
-            screenWriter.drawString(i, 5, BORDER_STRING);
-            screenWriter.drawString(i, 20, BORDER_STRING);
+            screenWriter.drawString(i, 5, MENUBORDER_STRING);
+            screenWriter.drawString(i, 20, MENUBORDER_STRING);
         }
         for (int i = 5; i < 21; i++) {
-            screenWriter.drawString(25, i, BORDER_STRING);
-            screenWriter.drawString(75, i, BORDER_STRING);
+            screenWriter.drawString(25, i, MENUBORDER_STRING);
+            screenWriter.drawString(75, i, MENUBORDER_STRING);
         }
-        screenWriter.drawString(47, 7, WELCOME);
-        screenWriter.drawString(42, 10, "CHOOSE GAME MODE:");
-        screenWriter.drawString(40, 13, "(BACKSPACE) NORMAL");
-        screenWriter.drawString(40, 15, "(HOME) HARD");
+        screen.putString(47, 7, WELCOME, Terminal.Color.GREEN, null);
+        screen.putString(42, 10, "CHOOSE GAME MODE:", Terminal.Color.WHITE, null);
+        screen.putString(40, 13, "(BACKSPACE) NORMAL", Terminal.Color.YELLOW, null);
+        screen.putString(40, 15, "(HOME) HARD", Terminal.Color.BLUE, null);
+        screen.putString(40, 18, "(ESC) EXIT", Terminal.Color.RED, null);
     }
 
     public static void clearMenu(){
@@ -96,8 +98,8 @@ public final class Field {
     private static void createScoreboard() {
         screen.putString(6, 0, "SCOREBOARD: " + scoreCounter, Terminal.Color.GREEN ,null);
         screen.putString(25, 0, "MAX SCORE: " + maxScore, Terminal.Color.YELLOW,null);
-        screen.putString(70, 25, "RESTART GAME -> TAB" , Terminal.Color.BLUE,null);
-        screen.putString(45, 25, "PAUSE -> ENTER" , Terminal.Color.BLUE,null);
+        screen.putString(75, 25, "RESTART GAME -> TAB" , Terminal.Color.BLUE,null);
+        screen.putString(40, 25, "PAUSE -> ENTER" , Terminal.Color.BLUE,null);
         screen.putString(5, 25, "QUIT -> ESCAPE" , Terminal.Color.RED,null);
     }
 

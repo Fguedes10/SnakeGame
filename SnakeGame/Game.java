@@ -58,6 +58,9 @@ public class Game {
                 setPause(false);
                 return true;
             }
+            if (k.getKind() == Escape) {
+                System.exit(1);
+            }
         }
         return false;
     }

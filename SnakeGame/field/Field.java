@@ -86,6 +86,24 @@ public final class Field {
         screen.putString(40, 18, "(ESC) EXIT", Terminal.Color.RED, null);
     }
 
+
+    public static void drawGameOver(){
+        for (int i = 25; i < 76; i++) {
+            screenWriter.drawString(i, 5, MENUBORDER_STRING);
+            screenWriter.drawString(i, 20, MENUBORDER_STRING);
+        }
+        for (int i = 5; i < 21; i++) {
+            screenWriter.drawString(25, i, MENUBORDER_STRING);
+            screenWriter.drawString(75, i, MENUBORDER_STRING);
+        }
+        screen.putString(43, 7, "-->GAME OVER<--", Terminal.Color.RED, null);
+        screen.putString(36, 10, "CHOOSE GAME MODE TO RESTART:", Terminal.Color.WHITE, null);
+        screen.putString(40, 13, "(BACKSPACE) NORMAL", Terminal.Color.YELLOW, null);
+        screen.putString(40, 15, "(HOME) HARD", Terminal.Color.BLUE, null);
+        screen.putString(40, 18, "(ESC) EXIT", Terminal.Color.RED, null);
+
+    }
+
     public static void clearMenu(){
         for (int i = 1; i < width-1; i++) {
             for (int j = 1; j < height-1 ; j++) {
